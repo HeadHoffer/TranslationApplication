@@ -10,7 +10,7 @@ using TranslationApplication.Models;
 //Use localhost:nnnn/swagger
 namespace TranslationApplication.Controllers
 {
-    [Route("api/translations")]
+    [Route("api/v1/translations")]
     [ApiController]
     public class TranslationController : ControllerBase
     {
@@ -22,14 +22,20 @@ namespace TranslationApplication.Controllers
         }
 
         /// <summary>
-        /// Gets all translations from the database
+        /// Gets a single translation from the database
         /// </summary>
+        /// <param name="languageKey"></param>
+        /// <param name="labelKey"></param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("getAll")]
-        public async Task<ActionResult<IEnumerable<Translation>>> GetTranslations()
+        [HttpGet("{languageKey}/{labelKey}", Name = "Get")]
+        public async Task<ActionResult<Translation>> Get(string languageKey, string labelKey)
         {
-            return await _context.Translations.ToListAsync();
+            var translation = await _context.Translations.FirstOrDefaultAsync(x => x.Key == labelKey && x.LanguageKey == languageKey);
+
+            if (translation == null)
+                return NotFound();
+
+            return translation;
         }
 
         /// <summary>
@@ -45,21 +51,14 @@ namespace TranslationApplication.Controllers
         }
 
         /// <summary>
-        /// Gets a single translation from the database
+        /// Gets all translations from the database
         /// </summary>
-        /// <param name="languageKey"></param>
-        /// <param name="labelKey"></param>
         /// <returns></returns>
-        [HttpGet(Name = "Get")]
-        [Route("getTranslation/{languageKey}/{labelKey}")]
-        public async Task<ActionResult<Translation>> Get(string languageKey, string labelKey)
+        [HttpGet]
+        [Route("getAll")]
+        public async Task<ActionResult<IEnumerable<Translation>>> Get()
         {
-            var translation = await _context.Translations.FirstOrDefaultAsync(x => x.Key == labelKey && x.LanguageKey == languageKey);
-
-            if (translation == null)
-                return NotFound();
-
-            return translation;
+            return await _context.Translations.ToListAsync();
         }
 
         /// <summary>

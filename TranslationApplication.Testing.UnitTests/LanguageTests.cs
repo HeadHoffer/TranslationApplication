@@ -37,7 +37,7 @@ namespace TranslationApplication.Testing.UnitTests
             {
                 LanguagesController controller = new LanguagesController(context);
 
-                var result = controller.GetLanguages().Result;
+                var result = controller.Get().Result;
                 List<Language> languages = result.Value.ToList();
 
                 Assert.Equal(3, languages.Count);
@@ -67,7 +67,7 @@ namespace TranslationApplication.Testing.UnitTests
             {
                 LanguagesController controller = new LanguagesController(context);
 
-                var result = controller.Get("fi").Result;
+                var result = controller.GetLanguage("fi").Result;
                 var language = result.Value;
 
                 Assert.Equal("Suomi", language.LanguageName);

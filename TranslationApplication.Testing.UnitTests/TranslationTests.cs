@@ -36,7 +36,7 @@ namespace TranslationApplication.Testing.UnitTests
             {
                 TranslationController controller = new TranslationController(context);
 
-                var result = controller.GetTranslations().Result;
+                var result = controller.Get().Result;
                 List<Translation> translations = result.Value.ToList();
 
                 Assert.Equal(4, translations.Count);

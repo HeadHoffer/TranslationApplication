@@ -11,7 +11,7 @@ using TranslationApplication.Models;
 //Use localhost:nnnn/swagger
 namespace TranslationApplication.Controllers
 {
-    [Route("api/languages")]
+    [Route("api/v1/languages")]
     [ApiController]
     public class LanguagesController : ControllerBase
     {
@@ -23,22 +23,12 @@ namespace TranslationApplication.Controllers
         }
 
         /// <summary>
-        /// Returns all languages from the database
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Language>>> GetLanguages()
-        {
-            return await _context.Languages.ToListAsync();
-        }
-
-        /// <summary>
         /// Finds a language from database based on a given key
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         [HttpGet("{key}", Name = "GetLanguage")]
-        public async Task<ActionResult<Language>> Get(string key)
+        public async Task<ActionResult<Language>> GetLanguage(string key)
         {
             var lang = await _context.Languages.FirstOrDefaultAsync(x => x.LanguageKey == key);
 
@@ -48,6 +38,17 @@ namespace TranslationApplication.Controllers
             }
 
             return lang;
+        }
+
+        /// <summary>
+        /// Returns all languages from the database
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("getAll")]
+        public async Task<ActionResult<IEnumerable<Language>>> Get()
+        {
+            return await _context.Languages.ToListAsync();
         }
 
         /// <summary>
@@ -79,7 +80,8 @@ namespace TranslationApplication.Controllers
         /// </summary>
         /// <param name="key">Language key</param>
         /// <returns></returns>
-        [HttpDelete("{key}")]
+        [HttpDelete]
+        [Route("{key}")]
         public async Task<ActionResult<Language>> Delete(string key)
         {
             var language = await _context.Languages.FirstOrDefaultAsync(x => x.LanguageKey == key);
